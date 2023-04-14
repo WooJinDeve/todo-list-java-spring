@@ -1,7 +1,28 @@
 package com.todo.todolist.dto;
 
 import com.todo.hashtag.dto.HashTagResponse;
-import java.util.Set;
+import com.todo.todolist.domain.TodoListEntity;
+import java.time.LocalDateTime;
+import java.util.List;
+import lombok.Builder;
 
-public record PageTodoListRequest(String nickname, String title, Set<HashTagResponse> hashTags, boolean isComplete) {
+@Builder
+public record PageTodoListRequest(List<TodoListRequest> requests, boolean hasNext) {
+
+    public record TodoListRequest(Long todoListId,
+                                  String nickname,
+                                  String title,
+                                  List<HashTagResponse> hashTags,
+                                  boolean isComplete,
+                                  LocalDateTime createdAt) {
+        public static TodoListRequest of(final TodoListEntity todoList) {
+            return new TodoListRequest(
+                    todoList.getId(),
+                    todoList.getUser().getNickname(),
+                    todoList.getTitle(),
+                    todoList.getHashtags().stream().map(HashTagResponse::of).toList(),
+                    todoList.isComplete(),
+                    todoList.getCreatedAt());
+        }
+    }
 }

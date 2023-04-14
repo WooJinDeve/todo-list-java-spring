@@ -29,8 +29,12 @@ public class HashTagEntity extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    public HashTagEntity(String name) {
+    @Column(nullable = false)
+    private String color;
+
+    public HashTagEntity(String name, String color) {
         this.name = name;
+        this.color = color;
     }
 
     @Override

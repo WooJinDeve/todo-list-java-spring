@@ -19,9 +19,4 @@ public class HashTagService {
     public Set<HashTagEntity> findHashtagsByNames(Set<String> names) {
         return new HashSet<>(hashTagRepository.findByNameIn(names));
     }
-
-    public HashTagEntity findById(final Long id){
-        return hashTagRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
-    }
 }

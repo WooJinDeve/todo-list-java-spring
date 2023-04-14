@@ -1,6 +1,6 @@
 POST localhost:8080/api/v1/todo-list
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoiMSIsImlhdCI6MTY4MTQ4NzAzOSwiZXhwIjoxNjgxNDg4ODM5fQ.EwJzkrnSg6U1pHZeYKc6yjm-gCEMf62RndS_E1Euj_4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoiMSIsImlhdCI6MTY4MTQ5MDA0MiwiZXhwIjoxNjgxNDkxODQyfQ.bvqS-rKKnlOHByyC8CEM9NH8bcOao5Pb5TqW9m1PR8A
 
 {
   "title" : "title",
@@ -14,5 +14,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoiMSIsImlhdCI6MTY4MTQ4N
 }
 
 ###
+GET localhost:8080/api/v1/todo-list?page=0&size=20
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoiMSIsImlhdCI6MTY4MTQ5MDA0MiwiZXhwIjoxNjgxNDkxODQyfQ.bvqS-rKKnlOHByyC8CEM9NH8bcOao5Pb5TqW9m1PR8A
+
+###
 PUT localhost:8080/api/v1/todo-list/1/complete
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoiMSIsImlhdCI6MTY4MTQ4NzAzOSwiZXhwIjoxNjgxNDg4ODM5fQ.EwJzkrnSg6U1pHZeYKc6yjm-gCEMf62RndS_E1Euj_4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoiMSIsImlhdCI6MTY4MTQ5MDA0MiwiZXhwIjoxNjgxNDkxODQyfQ.bvqS-rKKnlOHByyC8CEM9NH8bcOao5Pb5TqW9m1PR8A
+
+
+###
+DELETE localhost:8080/api/v1/todo-list/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjoiMSIsImlhdCI6MTY4MTQ5MDA0MiwiZXhwIjoxNjgxNDkxODQyfQ.bvqS-rKKnlOHByyC8CEM9NH8bcOao5Pb5TqW9m1PR8A
+

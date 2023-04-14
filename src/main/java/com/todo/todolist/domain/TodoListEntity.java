@@ -94,4 +94,9 @@ public class TodoListEntity extends BaseEntity {
     public void addSubTodos(List<TodoListEntity> subLists){
         this.children.addAll(subLists);
     }
+
+    public void deleteSetUp(){
+        this.children.clear();
+        this.hashtags.clear();
+    }
 }
