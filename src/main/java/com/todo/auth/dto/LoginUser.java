@@ -1,4 +1,6 @@
 package com.todo.auth.dto;
 
-public record LoginUser() {
+import java.util.List;
+
+public record LoginUser(Long userId, List<String> role) {
 }
