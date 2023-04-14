@@ -54,12 +54,19 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
-    public void changeComplete(final Long userId, final Long todoListId) {
+    public void missionComplete(final Long userId, final Long todoListId) {
         final var findUser = userRepository.getById(userId);
         final var findTodoList = todoListRepository.getById(todoListId);
         validateOwner(findTodoList, findUser);
-        findTodoList.changeComplete();
+        findTodoList.missionComplete();
+        ifParentIsCompleteThenChildMissionComplete(findTodoList);
         todoListRepository.saveAndFlush(findTodoList);
+    }
+
+    private void ifParentIsCompleteThenChildMissionComplete(final TodoListEntity todoList){
+        if (todoList.isParent()) {
+            todoListRepository.updateChildMissionComplete(todoList.getId());
+        }
     }
 
     private void validateOwner(final TodoListEntity todoList, final UserEntity owner){

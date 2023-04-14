@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -78,8 +79,12 @@ public class TodoListEntity extends BaseEntity {
         return user.getId().equals(userId);
     }
 
-    public void changeComplete() {
-        this.isComplete = !this.isComplete;
+    public void missionComplete() {
+        this.isComplete = true;
+    }
+
+    public boolean isParent(){
+        return Objects.isNull(parent);
     }
 
     public void addHashTags(Collection<HashTagEntity> hashTags){
