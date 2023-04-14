@@ -1,6 +1,9 @@
 package com.todo.todolist.service;
 
+<<<<<<< HEAD
 import static java.lang.Long.*;
+=======
+>>>>>>> b4cf0c87c929788a03f45f6685f048aa15274da1
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
@@ -30,7 +33,11 @@ public class CookieViewSupporter {
     private Map<String, List<Long>> extract(final String logs){
         return Arrays.stream(logs.split(DATE_DELIMITER))
                 .map(log -> log.split(KEY_VALUE_DELIMITER))
+<<<<<<< HEAD
                 .collect(groupingBy(log -> log[0], mapping(log -> parseLong(log[1]), toList())));
+=======
+                .collect(groupingBy(log -> log[0], mapping(log -> Long.parseLong(log[1]), toList())));
+>>>>>>> b4cf0c87c929788a03f45f6685f048aa15274da1
     }
 
     public String updateLog(final String log, final Long todoListId){
