@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "todo_lists")
 @NoArgsConstructor(access = PROTECTED)
-public class TodoList extends BaseEntity {
+public class TodoListEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -45,10 +45,10 @@ public class TodoList extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private TodoList parent;
+    private TodoListEntity parent;
 
     @OneToMany(mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<TodoList> children = new ArrayList<>();
+    private List<TodoListEntity> children = new ArrayList<>();
 
     @JoinTable(
             name = "todo_lists_hashtag",
@@ -59,19 +59,19 @@ public class TodoList extends BaseEntity {
     private Set<HashTagEntity> hashtags = new LinkedHashSet<>();
 
     private boolean isComplete;
-    private TodoList(final UserEntity user, final String title, final String content, final TodoList parent) {
+    private TodoListEntity(final UserEntity user, final String title, final String content, final TodoListEntity parent) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.parent = parent;
     }
 
-    public static TodoList parent(final UserEntity user, final String title, final String content){
-        return new TodoList(user, title, content, null);
+    public static TodoListEntity parent(final UserEntity user, final String title, final String content){
+        return new TodoListEntity(user, title, content, null);
     }
 
-    public static TodoList child(final TodoList parent, final String content){
-        return new TodoList(parent.user, null, content, parent);
+    public static TodoListEntity child(final TodoListEntity parent, final String content){
+        return new TodoListEntity(parent.user, null, content, parent);
     }
 
     public boolean isOwner(Long userId) {
@@ -86,7 +86,7 @@ public class TodoList extends BaseEntity {
         this.hashtags.addAll(hashTags);
     }
 
-    public void addSubTodos(List<TodoList> subLists){
+    public void addSubTodos(List<TodoListEntity> subLists){
         this.children.addAll(subLists);
     }
 }

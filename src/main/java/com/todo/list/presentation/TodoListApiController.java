@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,5 +28,12 @@ public class TodoListApiController {
             @RequestBody @Valid AddTotoListRequest request) {
         final Long todoListId = todoListService.addTodoList(loginUser.userId(), request);
         return ResponseEntity.created(URI.create("/api/v1/todo-list/" + todoListId)).build();
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<Void> changeComplete(@AuthenticationPrincipal LoginUser loginUser,
+                                               @PathVariable Long id){
+        todoListService.changeComplete(loginUser.userId(), id);
+        return ResponseEntity.ok().build();
     }
 }
