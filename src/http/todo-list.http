@@ -26,9 +26,12 @@ client.global.set("token", response.body.accessToken) // 토큰 값을 global �
 %}
 
 ### 3, 내정보
-GET {{uri}}/users/me
+GET {{uri}}/users/email
 Content-Type: application/json
-Authorization: Bearer {{token}}
+
+{
+  "email": "dummy1@naver.com"
+}
 
 
 ### 1. TODO-LIST 등록

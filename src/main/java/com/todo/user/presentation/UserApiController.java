@@ -6,6 +6,7 @@ import com.todo.auth.annotation.AuthenticationPrincipal;
 import com.todo.auth.domain.AuthToken;
 import com.todo.auth.dto.LoginUser;
 import com.todo.user.domain.UserEntity;
+import com.todo.user.dto.EmailCheckRequest;
 import com.todo.user.dto.LoginRequest;
 import com.todo.user.dto.ResisterRequest;
 import com.todo.user.service.UserService;
@@ -33,14 +34,15 @@ public class UserApiController {
         return ResponseEntity.status(CREATED).build();
     }
 
+    @GetMapping("/resister/email")
+    public ResponseEntity<Void> me(@AuthenticationPrincipal EmailCheckRequest request) {
+        userService.validateExistEmail(request.email());
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthToken> login(@RequestBody @Valid LoginRequest request) {
         final var token = userService.login(request);
         return ResponseEntity.ok(token);
-    }
-
-    @GetMapping("/users/me")
-    public ResponseEntity<LoginUser> me(@AuthenticationPrincipal LoginUser loginUser){
-        return ResponseEntity.ok(loginUser);
     }
 }

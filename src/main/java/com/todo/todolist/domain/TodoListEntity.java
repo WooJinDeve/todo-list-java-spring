@@ -48,8 +48,8 @@ public class TodoListEntity extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private TodoListEntity parent;
 
-    @OneToMany(mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<TodoListEntity> children = new ArrayList<>();
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<TodoListEntity> children = new ArrayList<>();
 
     @JoinTable(
             name = "todo_lists_hashtag",
@@ -57,7 +57,7 @@ public class TodoListEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "hashtagId")
     )
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<HashTagEntity> hashtags = new LinkedHashSet<>();
+    private final Set<HashTagEntity> hashtags = new LinkedHashSet<>();
 
     private boolean isComplete;
     private TodoListEntity(final UserEntity user, final String title, final String content, final TodoListEntity parent) {
