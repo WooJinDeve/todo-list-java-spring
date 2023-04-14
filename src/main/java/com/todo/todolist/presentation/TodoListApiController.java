@@ -1,9 +1,9 @@
-package com.todo.list.presentation;
+package com.todo.todolist.presentation;
 
 import com.todo.auth.annotation.AuthenticationPrincipal;
 import com.todo.auth.dto.LoginUser;
-import com.todo.list.dto.AddTotoListRequest;
-import com.todo.list.service.TodoListService;
+import com.todo.todolist.dto.AddTotoListRequest;
+import com.todo.todolist.service.TodoListService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;

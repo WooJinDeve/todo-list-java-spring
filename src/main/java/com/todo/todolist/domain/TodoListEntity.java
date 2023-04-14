@@ -1,4 +1,4 @@
-package com.todo.list.domain;
+package com.todo.todolist.domain;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;

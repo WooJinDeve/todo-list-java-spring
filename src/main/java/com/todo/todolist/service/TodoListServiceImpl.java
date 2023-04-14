@@ -1,11 +1,11 @@
-package com.todo.list.service;
+package com.todo.todolist.service;
 
 import com.todo.hashtag.domain.HashTagEntity;
 import com.todo.hashtag.service.HashTagService;
-import com.todo.list.domain.TodoListEntity;
-import com.todo.list.domain.TodoListRepository;
-import com.todo.list.dto.AddSubTodoListRequest;
-import com.todo.list.dto.AddTotoListRequest;
+import com.todo.todolist.domain.TodoListEntity;
+import com.todo.todolist.domain.TodoListRepository;
+import com.todo.todolist.dto.AddSubTodoListRequest;
+import com.todo.todolist.dto.AddTotoListRequest;
 import com.todo.user.domain.UserEntity;
 import com.todo.user.domain.UserRepository;
 import java.util.List;
