@@ -14,6 +14,7 @@ public record PageTodoListRequest(List<TodoListRequest> requests, boolean hasNex
                                   String title,
                                   List<HashTagResponse> hashTags,
                                   boolean isComplete,
+                                  int viewCount,
                                   LocalDateTime createdAt) {
         public static TodoListRequest of(final TodoListEntity todoList) {
             return new TodoListRequest(
@@ -22,6 +23,7 @@ public record PageTodoListRequest(List<TodoListRequest> requests, boolean hasNex
                     todoList.getTitle(),
                     HashTagResponse.of(todoList.getHashtags()),
                     todoList.isComplete(),
+                    todoList.getViewCount(),
                     todoList.getCreatedAt());
         }
     }

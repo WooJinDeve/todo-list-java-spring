@@ -3,7 +3,6 @@ package com.todo.auth.service;
 import com.todo.auth.domain.AuthToken;
 import com.todo.auth.domain.AuthTokenRepository;
 import com.todo.auth.domain.AuthenticationTokenEntity;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

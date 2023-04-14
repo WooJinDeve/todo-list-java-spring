@@ -1,7 +1,6 @@
 package com.todo.auth.service;
 
 import com.todo.auth.domain.AuthToken;
-import java.util.List;
 
 public interface AuthenticationService {
 

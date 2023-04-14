@@ -55,7 +55,7 @@ GET {{uri}}/todo-list?page=0&size=5
 Authorization: Bearer {{token}}
 
 ### 3. TODO-LIST 단일 조회
-GET {{uri}}/todo-list/1
+GET {{uri}}/todo-list/4
 Authorization: Bearer {{token}}
 
 

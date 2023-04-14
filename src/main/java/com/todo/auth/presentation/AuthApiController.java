@@ -18,7 +18,7 @@ public class AuthApiController {
     private final AuthenticationService authenticationService;
 
     @GetMapping("/renew")
-    public ResponseEntity<AuthToken> renewAuthTokenFromRefreshToken(@RequestParam String refreshToken) {
+    public ResponseEntity<AuthToken> renewAuthTokenFromRefreshToken(@RequestParam final String refreshToken) {
         final var renewToken = authenticationService.renewAuthTokenFromRefreshToken(refreshToken);
         return ResponseEntity.status(CREATED).body(renewToken);
     }

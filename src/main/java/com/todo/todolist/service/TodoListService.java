@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface TodoListService {
 
-    DetailTodoListRequest findById(final Long userId, final Long todoListId);
+    DetailTodoListRequest findById(final Long userId, final Long todoListId, final String log);
 
     PageTodoListRequest findPageTodoList(final Long userId, final Pageable pageable);
 

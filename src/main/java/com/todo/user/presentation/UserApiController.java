@@ -29,19 +29,19 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/resister")
-    public ResponseEntity<Void> resister(@RequestBody @Valid ResisterRequest request) {
+    public ResponseEntity<Void> resister(@RequestBody @Valid final  ResisterRequest request) {
         userService.resister(request);
         return ResponseEntity.status(CREATED).build();
     }
 
     @GetMapping("/resister/email")
-    public ResponseEntity<Void> me(@AuthenticationPrincipal EmailCheckRequest request) {
+    public ResponseEntity<Void> me(@AuthenticationPrincipal final EmailCheckRequest request) {
         userService.validateExistEmail(request.email());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthToken> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<AuthToken> login(@RequestBody @Valid final LoginRequest request) {
         final var token = userService.login(request);
         return ResponseEntity.ok(token);
     }

@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -44,6 +45,8 @@ public class TodoListEntity extends BaseEntity {
     private String title;
     private String content;
 
+    private Integer viewCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TodoListEntity parent;
@@ -60,19 +63,22 @@ public class TodoListEntity extends BaseEntity {
     private final Set<HashTagEntity> hashtags = new LinkedHashSet<>();
 
     private boolean isComplete;
-    private TodoListEntity(final UserEntity user, final String title, final String content, final TodoListEntity parent) {
+
+    @Builder
+    private TodoListEntity(final UserEntity user, final String title, final String content, final TodoListEntity parent, final Integer viewCount) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.parent = parent;
+        this.viewCount = Objects.isNull(viewCount) ? 0 : viewCount;
     }
 
     public static TodoListEntity parent(final UserEntity user, final String title, final String content){
-        return new TodoListEntity(user, title, content, null);
+        return new TodoListEntity(user, title, content, null, null);
     }
 
     public static TodoListEntity child(final TodoListEntity parent, final String content){
-        return new TodoListEntity(parent.user, null, content, parent);
+        return new TodoListEntity(parent.user, null, content, parent, null);
     }
 
     public boolean isOwner(Long userId) {

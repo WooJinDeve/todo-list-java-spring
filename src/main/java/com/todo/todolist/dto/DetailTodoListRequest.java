@@ -15,6 +15,7 @@ public record DetailTodoListRequest(Long todoListId,
                                     List<HashTagResponse> hashTags,
                                     List<SubTodoListRequest> subLists,
                                     boolean isComplete,
+                                    int viewCount,
                                     LocalDateTime createdAt,
                                     LocalDateTime updatedAt) {
 
@@ -27,6 +28,7 @@ public record DetailTodoListRequest(Long todoListId,
                 HashTagResponse.of(todoList.getHashtags()),
                 SubTodoListRequest.of(new HashSet<>(todoList.getChildren())),
                 todoList.isComplete(),
+                todoList.getViewCount(),
                 todoList.getCreatedAt(),
                 todoList.getUpdatedAt());
     }

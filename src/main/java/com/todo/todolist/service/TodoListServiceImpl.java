@@ -25,14 +25,22 @@ public class TodoListServiceImpl implements TodoListService {
     private final HashTagService hashTagService;
     private final TodoListRepository todoListRepository;
     private final UserRepository userRepository;
+    private final CookieViewSupporter cookieViewSupporter;
 
     @Override
-    public DetailTodoListRequest findById(final Long userId, final Long todoListId) {
+    public DetailTodoListRequest findById(final Long userId, final Long todoListId, final String log) {
         final var findUser = userRepository.getById(userId);
         final var todolist = todoListRepository.findByIdWithInformation(todoListId)
                 .orElseThrow(IllegalArgumentException::new);
         validateOwner(todolist, findUser);
+        ifFirstTimeTodayByIdThenIncreaseView(todoListId, log);
         return DetailTodoListRequest.of(todolist);
+    }
+
+    private void ifFirstTimeTodayByIdThenIncreaseView(Long todoListId, String log) {
+        if (cookieViewSupporter.isFirstView(log, todoListId)){
+            todoListRepository.increaseViewById(todoListId);
+        }
     }
 
     @Override

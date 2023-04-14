@@ -1,10 +1,9 @@
 package com.todo.hashtag.service;
 
-import static com.todo.hashtag.service.RandomColorGenerator.*;
+import static com.todo.hashtag.service.RandomColorGenerator.randomColor;
 
 import com.todo.hashtag.domain.HashTagEntity;
 import com.todo.hashtag.domain.HashTagRepository;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
