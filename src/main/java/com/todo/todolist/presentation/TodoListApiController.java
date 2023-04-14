@@ -33,7 +33,7 @@ public class TodoListApiController {
     @PutMapping("/{id}/complete")
     public ResponseEntity<Void> changeComplete(@AuthenticationPrincipal LoginUser loginUser,
                                                @PathVariable Long id){
-        todoListService.changeComplete(loginUser.userId(), id);
+        todoListService.missionComplete(loginUser.userId(), id);
         return ResponseEntity.ok().build();
     }
 }
