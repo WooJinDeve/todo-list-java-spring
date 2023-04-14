@@ -8,16 +8,15 @@ import com.todo.todolist.domain.TodoListEntity;
 import com.todo.todolist.domain.TodoListRepository;
 import com.todo.todolist.dto.AddSubTodoListRequest;
 import com.todo.todolist.dto.AddTotoListRequest;
+import com.todo.todolist.dto.DetailTodoListRequest;
 import com.todo.todolist.dto.PageTodoListRequest;
 import com.todo.todolist.dto.PageTodoListRequest.TodoListRequest;
 import com.todo.user.domain.UserEntity;
 import com.todo.user.domain.UserRepository;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +30,24 @@ public class TodoListServiceImpl implements TodoListService {
     private final UserRepository userRepository;
 
     @Override
+    public DetailTodoListRequest findById(final Long userId, final Long todoListId) {
+        final var findUser = userRepository.getById(userId);
+        final var todolist = todoListRepository.findByIdWithInformation(todoListId)
+                .orElseThrow(IllegalArgumentException::new);
+        validateOwner(todolist, findUser);
+        return DetailTodoListRequest.of(todolist);
+    }
+
+    @Override
     public PageTodoListRequest findPageTodoList(final Long userId, final Pageable pageable) {
-        final var todoLists = todoListRepository.findAllByUserIdAndParentIsNullOrderByIdDesc(userId, pageable);
+        final var todoLists = todoListRepository.findAllByUserIdAndParentIsNull(userId, pageable);
         return PageTodoListRequest.builder()
                 .requests(todoLists.map(TodoListRequest::of).toList())
                 .hasNext(todoLists.hasNext())
                 .build();
     }
+
+
 
     @Override
     public Long addTodoList(final Long userId, final AddTotoListRequest request) {
@@ -60,7 +70,7 @@ public class TodoListServiceImpl implements TodoListService {
                                                     final List<AddSubTodoListRequest> requests) {
         return requests.stream()
                 .map(request -> TodoListEntity.child(parent, request.content()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Set<HashTagEntity> findNotOverlapHashTagsFromHashTagNames(final Set<String> names) {

@@ -20,7 +20,7 @@ public record PageTodoListRequest(List<TodoListRequest> requests, boolean hasNex
                     todoList.getId(),
                     todoList.getUser().getNickname(),
                     todoList.getTitle(),
-                    todoList.getHashtags().stream().map(HashTagResponse::of).toList(),
+                    HashTagResponse.of(todoList.getHashtags()),
                     todoList.isComplete(),
                     todoList.getCreatedAt());
         }

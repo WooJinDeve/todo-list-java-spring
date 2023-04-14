@@ -1,6 +1,8 @@
 package com.todo.todolist.domain;
 
 import com.todo.user.domain.UserEntity;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -19,9 +21,16 @@ public interface TodoListRepository extends JpaRepository<TodoListEntity, Long> 
     void deleteAllByParentId(final Long parentId);
 
     @EntityGraph(attributePaths = {"hashtags", "user"})
-    Slice<TodoListEntity> findAllByUserIdAndParentIsNullOrderByIdDesc(final Long userId, final Pageable pageable);
+    Slice<TodoListEntity> findAllByUserIdAndParentIsNull(final Long userId, final Pageable pageable);
+    @Query(value = """
+             SELECT tl FROM TodoListEntity tl
+                JOIN FETCH tl.hashtags
+                JOIN FETCH tl.children
+             WHERE tl.id = :todoListId
+            """)
+    Optional<TodoListEntity> findByIdWithInformation(final Long todoListId);
 
-    default TodoListEntity getById(final Long todoListId){
+    default TodoListEntity getById(final Long todoListId) {
         return findById(todoListId)
                 .orElseThrow(IllegalArgumentException::new);
     }

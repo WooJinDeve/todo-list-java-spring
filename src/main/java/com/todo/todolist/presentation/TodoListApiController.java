@@ -3,6 +3,7 @@ package com.todo.todolist.presentation;
 import com.todo.auth.annotation.AuthenticationPrincipal;
 import com.todo.auth.dto.LoginUser;
 import com.todo.todolist.dto.AddTotoListRequest;
+import com.todo.todolist.dto.DetailTodoListRequest;
 import com.todo.todolist.dto.PageTodoListRequest;
 import com.todo.todolist.service.TodoListService;
 import jakarta.validation.Valid;
@@ -26,6 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TodoListApiController {
 
     private final TodoListService todoListService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DetailTodoListRequest> getById(@AuthenticationPrincipal LoginUser loginUser,
+                                                         @PathVariable Long id){
+        final var response = todoListService.findById(loginUser.userId(), id);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping
     public ResponseEntity<PageTodoListRequest> getPageTodoList(@AuthenticationPrincipal LoginUser loginUser,
