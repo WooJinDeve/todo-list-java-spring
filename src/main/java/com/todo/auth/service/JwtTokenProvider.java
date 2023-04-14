@@ -1,7 +1,7 @@
 package com.todo.auth.service;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
-import static io.jsonwebtoken.security.Keys.*;
+import static io.jsonwebtoken.security.Keys.hmacShaKeyFor;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.todo.auth.domain.AuthToken;
@@ -9,10 +9,8 @@ import com.todo.auth.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
@@ -76,12 +74,12 @@ public class JwtTokenProvider {
 
     private boolean isExpiredToken(final String token){
         try {
-            return !Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token).getBody().getExpiration().before(new Date());
         } catch (final JwtException | IllegalArgumentException e) {
-            return false;
+            return true;
         }
     }
 }

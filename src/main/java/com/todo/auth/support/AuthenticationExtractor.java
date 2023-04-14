@@ -16,7 +16,7 @@ public class AuthenticationExtractor {
     }
 
     private static void validateHeader(final String header){
-        if (StringUtils.hasText(header)) {
+        if (!StringUtils.hasText(header)) {
             throw new IllegalArgumentException();
         }
     }
