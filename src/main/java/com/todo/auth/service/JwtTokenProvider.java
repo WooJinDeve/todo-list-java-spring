@@ -22,8 +22,6 @@ import org.springframework.util.StringUtils;
 public class JwtTokenProvider {
 
     private static final String CLAIMS_PAYLOAD = "payload";
-    private static final String CLAIMS_ROLES = "roles";
-
     private final SecretKey secretKey;
     private final long accessTokenExpired;
     private final long refreshTokenExpired;
@@ -35,18 +33,17 @@ public class JwtTokenProvider {
         this.refreshTokenExpired = jwtProperties.getRefreshTokenExpiration();
     }
 
-    public AuthToken generateAuthToken(final String payload, final List<String> roles){
-        String accessToken = createToken(payload, roles, accessTokenExpired);
-        String refreshToken = createToken(payload, roles, refreshTokenExpired);
+    public AuthToken generateAuthToken(final String payload){
+        String accessToken = createToken(payload, accessTokenExpired);
+        String refreshToken = createToken(payload, refreshTokenExpired);
         return new AuthToken(accessToken, refreshToken);
     }
 
-    private String createToken(final String payload, final List<String> roles, long tokenExpired){
+    private String createToken(final String payload, long tokenExpired){
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenExpired);
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIMS_ROLES, roles);
         claims.put(CLAIMS_PAYLOAD, payload);
 
         return Jwts.builder()
@@ -60,10 +57,6 @@ public class JwtTokenProvider {
 
     public String getPayloadFormToken(final String token){
         return getClaimsBodyWhenExtractToken(token).get(CLAIMS_PAYLOAD, String.class);
-    }
-
-    public List<String> getRolesFromToken(final String token){
-        return getClaimsBodyWhenExtractToken(token).get(CLAIMS_ROLES, List.class);
     }
 
     private Claims getClaimsBodyWhenExtractToken(final String token){

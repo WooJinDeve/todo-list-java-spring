@@ -16,8 +16,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthTokenRepository authTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthToken generateAuthToken(final Long userId, final List<String> roles) {
-        AuthToken authToken = jwtTokenProvider.generateAuthToken(String.valueOf(userId), roles);
+    public AuthToken generateAuthToken(final Long userId) {
+        AuthToken authToken = jwtTokenProvider.generateAuthToken(String.valueOf(userId));
         authTokenRepository.save(createAuthTokenEntity(userId, authToken.refreshToken()));
         return authToken;
     }
@@ -25,8 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthToken renewAuthTokenFromRefreshToken(final String refreshToken){
         final var authKey = convertPayloadFromTokenToAuthKey(refreshToken);
         final var authToken = findByKey(authKey);
-        final var roles = jwtTokenProvider.getRolesFromToken(authToken.getRefreshToken());
-        return generateAuthToken(authKey, roles);
+        return generateAuthToken(authToken.getKey());
     }
 
     private AuthenticationTokenEntity createAuthTokenEntity(final Long userId, final String refreshToken) {

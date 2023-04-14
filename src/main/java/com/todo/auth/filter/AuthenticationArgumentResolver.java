@@ -32,7 +32,6 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
     private LoginUser createLoginUserFromToken(final String token){
         String payload = jwtTokenProvider.getPayloadFormToken(token);
-        List<String> roles = jwtTokenProvider.getRolesFromToken(token);
-        return new LoginUser(Long.parseLong(payload), roles);
+        return new LoginUser(Long.parseLong(payload));
     }
 }

@@ -1,4 +1,4 @@
-package com.todo.config;
+package com.todo.global.config;
 
 import com.todo.auth.filter.AuthenticationArgumentResolver;
 import java.util.List;

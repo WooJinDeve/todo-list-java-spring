@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface AuthenticationService {
 
-    AuthToken generateAuthToken(final Long userId, final List<String> roles);
+    AuthToken generateAuthToken(final Long userId);
 
     AuthToken renewAuthTokenFromRefreshToken(final String refreshToken);
 }

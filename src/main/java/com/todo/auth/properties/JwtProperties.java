@@ -2,21 +2,23 @@ package com.todo.auth.properties;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 @Getter
+@Setter
 @Component
-@RequiredArgsConstructor
 public class JwtProperties {
 
     @Value("${jwt.token.secret}")
-    private final String secretKey;
+    private String secretKey;
 
     @Value("${jwt.token.access.expiration}")
-    private final Long accessTokenExpiration;
+    private Long accessTokenExpiration;
 
     @Value("${jwt.token.refresh.expiration}")
-    private final Long refreshTokenExpiration;
+    private Long refreshTokenExpiration;
 }
