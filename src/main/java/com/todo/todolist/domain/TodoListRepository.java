@@ -10,6 +10,7 @@ public interface TodoListRepository extends JpaRepository<TodoListEntity, Long> 
     @Transactional
     @Modifying
     @Query(value = "UPDATE todo_lists as tl SET tl.is_complete = 1 WHERE tl.parent_id = :todoListId", nativeQuery = true)
+
     void updateChildMissionComplete(final Long todoListId);
 
     default TodoListEntity getById(final Long todoListId){
