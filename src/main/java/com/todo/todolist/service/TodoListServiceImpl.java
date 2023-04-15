@@ -33,10 +33,7 @@ public class TodoListServiceImpl implements TodoListService {
 
     @Override
     public DetailTodoListResponse findById(final Long userId, final Long todoListId, final String log) {
-        final var findUser = userRepository.getById(userId);
-        final var todolist = todoListRepository.findByIdWithInformation(todoListId)
-                .orElseThrow(IllegalArgumentException::new);
-        validateOwner(todolist, findUser);
+        final var todolist = getCertifiedTodoList(userId, todoListId);
         ifFirstTimeTodayByIdThenIncreaseView(todoListId, log);
         return DetailTodoListResponse.of(todolist);
     }
@@ -122,11 +119,15 @@ public class TodoListServiceImpl implements TodoListService {
     @Override
     public void deleteById(final Long userId, final Long todoListId) {
         final var findTodoList = getCertifiedTodoList(userId, todoListId);
-        final var deletedTodoListIds = getDeletedTodoListIds(findTodoList);
-        findTodoList.deleteSetUp();
-        todoListRepository.deleteById(todoListId);
-        todoListRepository.flush();
+        final var deletedTodoListIds = getHashTagIdsByDeletedTodoList(findTodoList);
+        deleteByTodoList(findTodoList);
         hashTagService.deleteNotUsedHashTags(deletedTodoListIds);
+    }
+
+    private void deleteByTodoList(final TodoListEntity findTodoList) {
+        findTodoList.deleteSetUp();
+        todoListRepository.delete(findTodoList);
+        todoListRepository.flush();
     }
 
     private TodoListEntity getCertifiedTodoList(final Long userId, final Long todoListId) {
@@ -136,7 +137,7 @@ public class TodoListServiceImpl implements TodoListService {
         return findTodoList;
     }
 
-    private List<Long> getDeletedTodoListIds(final TodoListEntity todoList){
+    private List<Long> getHashTagIdsByDeletedTodoList(final TodoListEntity todoList){
         return todoList.getHashtags().stream()
                 .map(HashTagEntity::getId)
                 .collect(Collectors.toList());
