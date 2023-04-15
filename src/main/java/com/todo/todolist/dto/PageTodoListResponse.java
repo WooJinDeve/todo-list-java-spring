@@ -1,5 +1,6 @@
 package com.todo.todolist.dto;
 
+import com.todo.global.util.CursorRequest;
 import com.todo.hashtag.dto.HashTagResponse;
 import com.todo.todolist.domain.TodoListEntity;
 import java.time.LocalDateTime;
@@ -7,7 +8,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record PageTodoListResponse(List<TodoListResponse> responses, boolean hasNext) {
+public record PageTodoListResponse(List<TodoListResponse> responses, CursorRequest nextCursorRequest) {
 
     public record TodoListResponse(Long todoListId,
                                    String nickname,

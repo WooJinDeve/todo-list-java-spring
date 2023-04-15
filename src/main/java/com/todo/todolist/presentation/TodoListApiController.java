@@ -4,9 +4,10 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 import com.todo.auth.annotation.AuthenticationPrincipal;
 import com.todo.auth.dto.LoginUser;
+import com.todo.global.util.CursorRequest;
 import com.todo.todolist.dto.AddTotoListRequest;
 import com.todo.todolist.dto.DetailTodoListResponse;
-import com.todo.todolist.dto.PageTodoListRequest;
+import com.todo.todolist.dto.PageTodoListResponse;
 import com.todo.todolist.service.CookieViewSupporter;
 import com.todo.todolist.service.TodoListService;
 import jakarta.validation.Valid;
@@ -44,9 +45,9 @@ public class TodoListApiController {
     }
 
     @GetMapping
-    public ResponseEntity<PageTodoListRequest> getPageTodoList(@AuthenticationPrincipal final LoginUser loginUser,
-                                                               final Pageable pageable) {
-        final var response = todoListService.findPageTodoList(loginUser.userId(), pageable);
+    public ResponseEntity<PageTodoListResponse> getPageTodoList(@AuthenticationPrincipal final LoginUser loginUser,
+                                                                final CursorRequest request) {
+        final var response = todoListService.findPageTodoList(loginUser.userId(), request);
         return ResponseEntity.ok(response);
     }
 

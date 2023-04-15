@@ -1,5 +1,6 @@
 package com.todo.todolist.domain;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -11,7 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface TodoListRepository extends JpaRepository<TodoListEntity, Long> {
     @EntityGraph(attributePaths = {"hashtags", "user"})
-    Slice<TodoListEntity> findAllByUserIdAndParentIsNull(final Long userId, final Pageable pageable);
+    List<TodoListEntity> findAllByIdLessThanAndUserIdAndParentIsNullOrderByIdDesc(final Long key, final Long userId, final Pageable pageable);
+
+    @EntityGraph(attributePaths = {"hashtags", "user"})
+    List<TodoListEntity> findAllByUserIdAndParentIsNullOrderByIdDesc(final Long userId, final Pageable pageable);
 
     @Query(value = """
              SELECT tl FROM TodoListEntity tl

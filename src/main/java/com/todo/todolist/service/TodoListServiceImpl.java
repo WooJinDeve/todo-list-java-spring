@@ -3,16 +3,19 @@ package com.todo.todolist.service;
 import static com.todo.todolist.domain.TodoListEntity.child;
 import static com.todo.todolist.domain.TodoListEntity.parent;
 
+import com.todo.global.util.CursorRequest;
 import com.todo.hashtag.service.HashTagService;
 import com.todo.todolist.domain.TodoListEntity;
 import com.todo.todolist.domain.TodoListRepository;
 import com.todo.todolist.dto.AddTotoListRequest;
 import com.todo.todolist.dto.DetailTodoListResponse;
-import com.todo.todolist.dto.PageTodoListRequest;
-import com.todo.todolist.dto.PageTodoListRequest.TodoListRequest;
+import com.todo.todolist.dto.PageTodoListResponse;
+import com.todo.todolist.dto.PageTodoListResponse.TodoListResponse;
 import com.todo.user.domain.UserEntity;
 import com.todo.user.domain.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,20 +41,35 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     private void ifFirstTimeTodayByIdThenIncreaseView(Long todoListId, String log) {
-        if (cookieViewSupporter.isFirstView(log, todoListId)){
+        if (cookieViewSupporter.isFirstView(log, todoListId)) {
             todoListRepository.increaseViewById(todoListId);
         }
     }
 
     @Override
-    public PageTodoListRequest findPageTodoList(final Long userId, final Pageable pageable) {
-        final var todoLists = todoListRepository.findAllByUserIdAndParentIsNull(userId, pageable);
-        return PageTodoListRequest.builder()
-                .requests(todoLists.map(TodoListRequest::of).toList())
-                .hasNext(todoLists.hasNext())
+    public PageTodoListResponse findPageTodoList(final Long userId, final CursorRequest request) {
+        final var todoLists = getAllByCursorRequest(userId, request);
+        return PageTodoListResponse.builder()
+                .responses(todoLists.stream().map(TodoListResponse::of).toList())
+                .nextCursorRequest(request.next(getNextKey(todoLists)))
                 .build();
     }
 
+    private List<TodoListEntity> getAllByCursorRequest(Long userId, CursorRequest request) {
+        if (request.hasKey()) {
+            return todoListRepository.findAllByIdLessThanAndUserIdAndParentIsNullOrderByIdDesc(request.key(), userId,
+                    PageRequest.of(0, request.size()));
+        }
+        return todoListRepository.findAllByUserIdAndParentIsNullOrderByIdDesc(userId,
+                PageRequest.of(0, request.size()));
+    }
+
+    private static long getNextKey(final List<TodoListEntity> todoLists) {
+        return todoLists.stream()
+                .mapToLong(TodoListEntity::getId)
+                .min()
+                .orElse(CursorRequest.NONE_KEY);
+    }
 
 
     @Override
