@@ -7,7 +7,7 @@ import com.todo.hashtag.service.HashTagService;
 import com.todo.todolist.domain.TodoListEntity;
 import com.todo.todolist.domain.TodoListRepository;
 import com.todo.todolist.dto.AddTotoListRequest;
-import com.todo.todolist.dto.DetailTodoListRequest;
+import com.todo.todolist.dto.DetailTodoListResponse;
 import com.todo.todolist.dto.PageTodoListRequest;
 import com.todo.todolist.dto.PageTodoListRequest.TodoListRequest;
 import com.todo.user.domain.UserEntity;
@@ -28,13 +28,13 @@ public class TodoListServiceImpl implements TodoListService {
     private final CookieViewSupporter cookieViewSupporter;
 
     @Override
-    public DetailTodoListRequest findById(final Long userId, final Long todoListId, final String log) {
+    public DetailTodoListResponse findById(final Long userId, final Long todoListId, final String log) {
         final var findUser = userRepository.getById(userId);
         final var todolist = todoListRepository.findByIdWithInformation(todoListId)
                 .orElseThrow(IllegalArgumentException::new);
         validateOwner(todolist, findUser);
         ifFirstTimeTodayByIdThenIncreaseView(todoListId, log);
-        return DetailTodoListRequest.of(todolist);
+        return DetailTodoListResponse.of(todolist);
     }
 
     private void ifFirstTimeTodayByIdThenIncreaseView(Long todoListId, String log) {

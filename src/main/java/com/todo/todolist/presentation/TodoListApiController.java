@@ -5,7 +5,7 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import com.todo.auth.annotation.AuthenticationPrincipal;
 import com.todo.auth.dto.LoginUser;
 import com.todo.todolist.dto.AddTotoListRequest;
-import com.todo.todolist.dto.DetailTodoListRequest;
+import com.todo.todolist.dto.DetailTodoListResponse;
 import com.todo.todolist.dto.PageTodoListRequest;
 import com.todo.todolist.service.CookieViewSupporter;
 import com.todo.todolist.service.TodoListService;
@@ -34,9 +34,9 @@ public class TodoListApiController {
     private final CookieViewSupporter cookieViewSupporter;
 
     @GetMapping("/{id}")
-    public ResponseEntity<DetailTodoListRequest> getById(@AuthenticationPrincipal final LoginUser loginUser,
-                                                         @PathVariable final Long id,
-                                                         @CookieValue(name = "viewedTodoList", required = false, defaultValue = "") final String log) {
+    public ResponseEntity<DetailTodoListResponse> getById(@AuthenticationPrincipal final LoginUser loginUser,
+                                                          @PathVariable final Long id,
+                                                          @CookieValue(name = "viewedTodoList", required = false, defaultValue = "") final String log) {
         final var response = todoListService.findById(loginUser.userId(), id, log);
         final var updateLog = cookieViewSupporter.updateLog(log, id);
         final var responseCookie = ResponseCookie.from("viewedTodoList", updateLog).maxAge(86400L).build();
