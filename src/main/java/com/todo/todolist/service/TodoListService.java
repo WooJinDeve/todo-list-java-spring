@@ -4,7 +4,6 @@ import com.todo.global.util.CursorRequest;
 import com.todo.todolist.dto.AddTotoListRequest;
 import com.todo.todolist.dto.DetailTodoListResponse;
 import com.todo.todolist.dto.PageTodoListResponse;
-import org.springframework.data.domain.Pageable;
 
 public interface TodoListService {
 

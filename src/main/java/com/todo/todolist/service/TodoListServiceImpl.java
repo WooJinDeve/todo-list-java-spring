@@ -5,6 +5,7 @@ import static com.todo.todolist.domain.TodoListEntity.parent;
 import static org.springframework.data.domain.PageRequest.of;
 
 import com.todo.global.util.CursorRequest;
+import com.todo.hashtag.domain.HashTagEntity;
 import com.todo.hashtag.service.HashTagService;
 import com.todo.todolist.domain.TodoListEntity;
 import com.todo.todolist.domain.TodoListRepository;
@@ -15,6 +16,7 @@ import com.todo.todolist.dto.PageTodoListResponse.TodoListResponse;
 import com.todo.user.domain.UserEntity;
 import com.todo.user.domain.UserRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,8 +122,11 @@ public class TodoListServiceImpl implements TodoListService {
     @Override
     public void deleteById(final Long userId, final Long todoListId) {
         final var findTodoList = getCertifiedTodoList(userId, todoListId);
+        final var deletedTodoListIds = getDeletedTodoListIds(findTodoList);
         findTodoList.deleteSetUp();
         todoListRepository.deleteById(todoListId);
+        todoListRepository.flush();
+        hashTagService.deleteNotUsedHashTags(deletedTodoListIds);
     }
 
     private TodoListEntity getCertifiedTodoList(final Long userId, final Long todoListId) {
@@ -129,6 +134,12 @@ public class TodoListServiceImpl implements TodoListService {
         final var findTodoList = todoListRepository.getById(todoListId);
         validateOwner(findTodoList, findUser);
         return findTodoList;
+    }
+
+    private List<Long> getDeletedTodoListIds(final TodoListEntity todoList){
+        return todoList.getHashtags().stream()
+                .map(HashTagEntity::getId)
+                .collect(Collectors.toList());
     }
 
     private void validateOwner(final TodoListEntity todoList, final UserEntity owner) {

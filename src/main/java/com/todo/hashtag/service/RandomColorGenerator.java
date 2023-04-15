@@ -2,7 +2,7 @@ package com.todo.hashtag.service;
 
 public class RandomColorGenerator {
 
-    public static String randomColor() {
+    public static String randomColorGenerate() {
         String R = generateRandomColorIntegerToHaxString();
         String G = generateRandomColorIntegerToHaxString();
         String B = generateRandomColorIntegerToHaxString();

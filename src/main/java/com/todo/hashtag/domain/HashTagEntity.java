@@ -3,13 +3,17 @@ package com.todo.hashtag.domain;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import com.todo.global.common.BaseEntity;
+import com.todo.todolist.domain.TodoListEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +35,10 @@ public class HashTagEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String color;
+
+
+    @ManyToMany(mappedBy = "hashtags")
+    private Set<TodoListEntity> todoLists = new LinkedHashSet<>();
 
     public HashTagEntity(String name, String color) {
         this.name = name;
