@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record PageTodoListResponse(List<TodoListResponse> requests, boolean hasNext) {
+public record PageTodoListResponse(List<TodoListResponse> responses, boolean hasNext) {
 
     public record TodoListResponse(Long todoListId,
                                    String nickname,
