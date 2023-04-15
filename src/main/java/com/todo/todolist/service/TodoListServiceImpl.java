@@ -2,6 +2,7 @@ package com.todo.todolist.service;
 
 import static com.todo.todolist.domain.TodoListEntity.child;
 import static com.todo.todolist.domain.TodoListEntity.parent;
+import static org.springframework.data.domain.PageRequest.of;
 
 import com.todo.global.util.CursorRequest;
 import com.todo.hashtag.service.HashTagService;
@@ -15,8 +16,6 @@ import com.todo.user.domain.UserEntity;
 import com.todo.user.domain.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,11 +56,31 @@ public class TodoListServiceImpl implements TodoListService {
 
     private List<TodoListEntity> getAllByCursorRequest(Long userId, CursorRequest request) {
         if (request.hasKey()) {
-            return todoListRepository.findAllByIdLessThanAndUserIdAndParentIsNullOrderByIdDesc(request.key(), userId,
-                    PageRequest.of(0, request.size()));
+            return todoListRepository.findAllByIdLessThanAndUserIdAndParentIsNullAndIsCompleteFalseOrderByIdDesc(
+                    request.key(),
+                    userId,
+                    of(0, request.size()));
         }
-        return todoListRepository.findAllByUserIdAndParentIsNullOrderByIdDesc(userId,
-                PageRequest.of(0, request.size()));
+        return todoListRepository.findAllByUserIdAndParentIsNullAndIsCompleteFalseOrderByIdDesc(userId, of(0, request.size()));
+    }
+
+    @Override
+    public PageTodoListResponse findPageCompleteTodoList(Long userId, CursorRequest request) {
+        final var todoLists = getCompleteAllByCursorRequest(userId, request);
+        return PageTodoListResponse.builder()
+                .responses(todoLists.stream().map(TodoListResponse::of).toList())
+                .nextCursorRequest(request.next(getNextKey(todoLists)))
+                .build();
+    }
+
+    private List<TodoListEntity> getCompleteAllByCursorRequest(Long userId, CursorRequest request) {
+        if (request.hasKey()) {
+            return todoListRepository.findAllByIdLessThanAndUserIdAndParentIsNullAndIsCompleteTrueOrderByIdDesc(
+                    request.key(),
+                    userId,
+                    of(0, request.size()));
+        }
+        return todoListRepository.findAllByUserIdAndParentIsNullAndIsCompleteTrueOrderByIdDesc(userId, of(0, request.size()));
     }
 
     private static long getNextKey(final List<TodoListEntity> todoLists) {

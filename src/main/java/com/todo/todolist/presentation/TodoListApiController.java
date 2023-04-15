@@ -51,6 +51,13 @@ public class TodoListApiController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/completes")
+    public ResponseEntity<PageTodoListResponse> getPageCompleteTodoList(@AuthenticationPrincipal final LoginUser loginUser,
+                                                                final CursorRequest request) {
+        final var response = todoListService.findPageCompleteTodoList(loginUser.userId(), request);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping
     public ResponseEntity<Void> addTodoList(
             @AuthenticationPrincipal final LoginUser loginUser,

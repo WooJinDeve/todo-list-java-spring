@@ -69,6 +69,10 @@ Authorization: Bearer {{accessToken}}
 GET {{uri}}/todo-list?size=20
 Authorization: Bearer {{accessToken}}
 
+### 3. 완료된 TODO-LIST 페이징 조회
+GET {{uri}}/todo-list/completes?size=20
+Authorization: Bearer {{accessToken}}
+
 ### 3. TODO-LIST 단일 조회
 GET {{uri}}/todo-list/1
 Authorization: Bearer {{accessToken}}

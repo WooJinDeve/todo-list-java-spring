@@ -12,10 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface TodoListRepository extends JpaRepository<TodoListEntity, Long> {
     @EntityGraph(attributePaths = {"hashtags", "user"})
-    List<TodoListEntity> findAllByIdLessThanAndUserIdAndParentIsNullOrderByIdDesc(final Long key, final Long userId, final Pageable pageable);
+    List<TodoListEntity> findAllByIdLessThanAndUserIdAndParentIsNullAndIsCompleteFalseOrderByIdDesc(final Long key, final Long userId, final Pageable pageable);
 
     @EntityGraph(attributePaths = {"hashtags", "user"})
-    List<TodoListEntity> findAllByUserIdAndParentIsNullOrderByIdDesc(final Long userId, final Pageable pageable);
+    List<TodoListEntity> findAllByUserIdAndParentIsNullAndIsCompleteFalseOrderByIdDesc(final Long userId, final Pageable pageable);
+
+    @EntityGraph(attributePaths = {"hashtags", "user"})
+    List<TodoListEntity> findAllByIdLessThanAndUserIdAndParentIsNullAndIsCompleteTrueOrderByIdDesc(final Long key, final Long userId, final Pageable pageable);
+
+    @EntityGraph(attributePaths = {"hashtags", "user"})
+    List<TodoListEntity> findAllByUserIdAndParentIsNullAndIsCompleteTrueOrderByIdDesc(final Long userId, final Pageable pageable);
 
     @Query(value = """
              SELECT tl FROM TodoListEntity tl
