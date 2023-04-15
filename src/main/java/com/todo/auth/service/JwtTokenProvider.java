@@ -20,64 +20,104 @@ import org.springframework.util.StringUtils;
 public class JwtTokenProvider {
 
     private static final String CLAIMS_PAYLOAD = "payload";
-    private final SecretKey secretKey;
+    private final SecretKey accessSecretKey;
+    private final SecretKey refreshSecretKey;
     private final long accessTokenExpired;
     private final long refreshTokenExpired;
 
 
     public JwtTokenProvider(final JwtProperties jwtProperties) {
-        this.secretKey = hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(UTF_8));
+        this.accessSecretKey = hmacShaKeyFor(jwtProperties.getAccessSecretKey().getBytes(UTF_8));
+        this.refreshSecretKey = hmacShaKeyFor(jwtProperties.getRefreshSecretKey().getBytes(UTF_8));
         this.accessTokenExpired = jwtProperties.getAccessTokenExpiration();
         this.refreshTokenExpired = jwtProperties.getRefreshTokenExpiration();
     }
 
     public AuthToken generateAuthToken(final String payload){
-        String accessToken = createToken(payload, accessTokenExpired);
-        String refreshToken = createToken(payload, refreshTokenExpired);
+        String accessToken = createAccessToken(payload);
+        String refreshToken = createRefreshToken(payload);
         return new AuthToken(accessToken, refreshToken);
     }
 
-    private String createToken(final String payload, long tokenExpired){
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + tokenExpired);
-
-        Map<String, Object> claims = new HashMap<>();
+    private String createAccessToken(final String payload){
+        final Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIMS_PAYLOAD, payload);
 
         return Jwts.builder()
                 .setSubject(payload)
                 .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(secretKey, HS256)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + accessTokenExpired))
+                .signWith(accessSecretKey, HS256)
                 .compact();
     }
 
-    public String getPayloadFormToken(final String token){
-        return getClaimsBodyWhenExtractToken(token).get(CLAIMS_PAYLOAD, String.class);
+    private String createRefreshToken(final String payload){
+        final Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIMS_PAYLOAD, payload);
+
+        return Jwts.builder()
+                .setSubject(payload)
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + refreshTokenExpired))
+                .signWith(refreshSecretKey, HS256)
+                .compact();
     }
 
-    private Claims getClaimsBodyWhenExtractToken(final String token){
-        validateToken(token);
+
+    public String getPayloadFormAccessToken(final String accessToken){
+        return getClaimsBodyWhenExtractAccessToken(accessToken).get(CLAIMS_PAYLOAD, String.class);
+    }
+
+    private Claims getClaimsBodyWhenExtractAccessToken(final String accessToken){
+        validateAccessToken(accessToken);
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(accessSecretKey)
                 .build()
-                .parseClaimsJws(token).getBody();
+                .parseClaimsJws(accessToken).getBody();
     }
 
+    public String getPayloadFormRefreshToken(final String refreshToken){
+        return getClaimsBodyWhenExtractRefreshToken(refreshToken).get(CLAIMS_PAYLOAD, String.class);
+    }
 
-    public void validateToken(final String token){
-        if (!StringUtils.hasText(token) || isExpiredToken(token)) {
+    private Claims getClaimsBodyWhenExtractRefreshToken(final String refreshToken){
+        return Jwts.parserBuilder()
+                .setSigningKey(refreshSecretKey)
+                .build()
+                .parseClaimsJws(refreshToken).getBody();
+    }
+
+    public void validateAccessToken(final String accessToken){
+        if (!StringUtils.hasText(accessToken) || isExpiredAccessToken(accessToken)) {
             throw new IllegalArgumentException();
         }
     }
 
-    private boolean isExpiredToken(final String token){
+    private boolean isExpiredAccessToken(final String token){
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(accessSecretKey)
                     .build()
                     .parseClaimsJws(token).getBody().getExpiration().before(new Date());
+        } catch (final JwtException | IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    public void validateRefreshToken(final String refreshToken){
+        if (!StringUtils.hasText(refreshToken) || isExpiredRefreshToken(refreshToken)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private boolean isExpiredRefreshToken(final String refreshToken){
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(refreshSecretKey)
+                    .build()
+                    .parseClaimsJws(refreshToken).getBody().getExpiration().before(new Date());
         } catch (final JwtException | IllegalArgumentException e) {
             return true;
         }

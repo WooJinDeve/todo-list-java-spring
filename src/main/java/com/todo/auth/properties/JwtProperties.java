@@ -13,8 +13,11 @@ import org.springframework.stereotype.Service;
 @Component
 public class JwtProperties {
 
-    @Value("${jwt.token.secret}")
-    private String secretKey;
+    @Value("${jwt.token.access-secret}")
+    private String accessSecretKey;
+
+    @Value("${jwt.token.refresh-secret}")
+    private String refreshSecretKey;
 
     @Value("${jwt.token.access.expiration}")
     private Long accessTokenExpiration;

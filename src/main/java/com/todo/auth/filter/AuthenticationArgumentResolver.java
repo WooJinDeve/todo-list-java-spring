@@ -5,7 +5,6 @@ import com.todo.auth.dto.LoginUser;
 import com.todo.auth.service.JwtTokenProvider;
 import com.todo.auth.support.AuthenticationExtractor;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -29,11 +28,11 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         final var request = (HttpServletRequest) webRequest.getNativeRequest();
         final var token = AuthenticationExtractor.extract(request);
-        return createLoginUserFromToken(token);
+        return createLoginUserFromAccessToken(token);
     }
 
-    private LoginUser createLoginUserFromToken(final String token){
-        String payload = jwtTokenProvider.getPayloadFormToken(token);
+    private LoginUser createLoginUserFromAccessToken(final String accessToken){
+        String payload = jwtTokenProvider.getPayloadFormAccessToken(accessToken);
         return new LoginUser(Long.parseLong(payload));
     }
 }

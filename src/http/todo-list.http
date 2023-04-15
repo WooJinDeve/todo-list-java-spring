@@ -22,10 +22,11 @@ client.assert(response.body.accessToken.trim().length > 0); // 토큰 길이가 
 });
 
 client.log(response.body.accessToken); // 토큰 값 로깅, body에는 응답받은 json이 객체 형식으로 저장된다. 즉 { accessToken:"value" }가 응답이라면, 여기선 value라 로깅된다.
-client.global.set("token", response.body.accessToken) // 토큰 값을 global 변수에 set
+client.global.set("accessToken", response.body.accessToken) // 토큰 값을 global 변수에 set
+client.global.set("refreshToken", response.body.refreshToken) // 토큰 값을 global 변수에 set
 %}
 
-### 3, 내정보
+### 3, 이메일 검증
 GET {{uri}}/users/email
 Content-Type: application/json
 
@@ -33,11 +34,25 @@ Content-Type: application/json
   "email": "dummy1@naver.com"
 }
 
+### 1. 토큰 재발급
+GET {{uri}}/auths/renew?refreshToken={{refreshToken}}
+
+> {%
+client.test("Validate", function() { // Validate라는 이름의 테스트를 수행
+client.assert(response.status === 200, "Response status is not 200"); // 응답값이 200이면 통과
+client.assert(response.contentType.mimeType === "application/json", "Expected 'application/json'"); // 응답값이 application/json이면 통과
+client.assert(response.body.accessToken.trim().length > 0); // 토큰 길이가 0보다 크면 통과
+});
+
+client.log(response.body.accessToken); // 토큰 값 로깅, body에는 응답받은 json이 객체 형식으로 저장된다. 즉 { accessToken:"value" }가 응답이라면, 여기선 value라 로깅된다.
+client.global.set("accessToken", response.body.accessToken) // 토큰 값을 global 변수에 set
+client.global.set("refreshToken", response.body.refreshToken) // 토큰 값을 global 변수에 set
+%}
 
 ### 1. TODO-LIST 등록
 POST {{uri}}/todo-list
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 
 {
   "title" : "title",
@@ -52,19 +67,19 @@ Authorization: Bearer {{token}}
 
 ### 2. TODO-LIST 페이징 조회
 GET {{uri}}/todo-list?page=0&size=5
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 
 ### 3. TODO-LIST 단일 조회
 GET {{uri}}/todo-list/1
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 
 
 ### 4. TODO-LIST 미션 완료
 PUT {{uri}}/todo-list/1/complete
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 
 
 ### 5. TODO-LIST 단일 삭제
 DELETE localhost:8080/api/v1/todo-list/1
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 
