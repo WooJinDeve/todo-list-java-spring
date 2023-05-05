@@ -30,7 +30,7 @@ function TodoCreate() {
         return;
     }
     instance.post(`/api/v1/todolists`, {
-        title: title, content: content, subListRequests : []
+        title: title, content: content, subListRequests : [{"title" : "test", "content" : "text"}, {"title" : "test", "content" : "text"}]
       }).then((res) => {
         alert("등록이 완료되었습니다.");
         window.location.replace("/")

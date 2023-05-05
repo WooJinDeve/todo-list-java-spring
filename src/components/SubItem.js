@@ -2,12 +2,14 @@ import styled, { css } from 'styled-components';
 import { MdDone, MdDelete } from 'react-icons/md';
 import { instance } from '../api/axios';
 
-function SubItem({ id, title, done, content }) {
+function SubItem({ props }) {
+  const {id, title, complete, content} = props;
+
   function onComplateClickHandler(e) {
     instance.put(`/api/v1/todolists/${id}`)
     .then((res) => {
-        window.location.replace("/")
-      })
+      window.location.replace("/")
+    })
     .catch((err) => {
       console.log(err);
     })
@@ -16,21 +18,20 @@ function SubItem({ id, title, done, content }) {
   function onDeleteClickHandler(e) {
     instance.delete(`/api/v1/todolists/${id}`)
     .then((res) => {
-        window.location.replace("/")
+      window.location.replace("/")
       })
     .catch((err) => {
       console.log(err);
     })
   }
 
-
   return (
     <>
     <TodoItemBlock>
-        <CheckCircle done={done} onClick={onComplateClickHandler}>{done && <MdDone />}</CheckCircle>
+        <CheckCircle done={complete} onClick={onComplateClickHandler}>{complete && <MdDone />}</CheckCircle>
         <Box>
-          <Title done={done}>{title}</Title>
-          <Content done={done}>{content}</Content>
+          <Title done={complete}>{title}</Title>
+          <Content done={complete}>{content}</Content>
         </Box>
         <Remove onClick={onDeleteClickHandler}><MdDelete /></Remove>
       </TodoItemBlock>

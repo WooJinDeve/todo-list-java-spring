@@ -41,7 +41,7 @@ function TodoList() {
 
   return <TodoListBlock>
     {values.map((value) => (
-       <TodoItem key={value.id} id={value.id} title={value.title} done={value.complete} content={value.content} />
+       <TodoItem key={value.id} props={value} />
      ))}
   </TodoListBlock>
 }
@@ -54,5 +54,5 @@ const TodoListBlock = styled.div`
   padding: 20px 32px;
   padding-bottom: 48px;
   overflow-y: auto;
-  background: white; /* 사이즈 조정이 잘 되고 있는지 확인하기 위한 임시 스타일 */
+  background: white;
 `;

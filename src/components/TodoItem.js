@@ -4,7 +4,11 @@ import { MdDone, MdDelete } from 'react-icons/md';
 import { instance } from '../api/axios';
 import SubItem from './SubItem';
 
-function TodoItem({ id, done, title, content }) {
+function TodoItem({ props }) {
+  const {id, title, complete, content} = props;
+
+
+
   const [open, setOpen] = useState(false);
   const [values, setValues] = useState([])
 
@@ -39,20 +43,20 @@ function TodoItem({ id, done, title, content }) {
   }
 
   return (
-    <div>
+    <>
     <TodoItemBlock>
-      <CheckCircle done={done} onClick={onComplateClickHandler} >{done && <MdDone/>}</CheckCircle>
+      <CheckCircle done={complete} onClick={onComplateClickHandler} >{complete && <MdDone/>}</CheckCircle>
       <Box onClick={onSubItemHandler}>
-        <Title done={done}>{title}</Title>
-        <Content done={done}>{content}</Content>
+        <Title done={complete}>{title}</Title>
+        <Content done={complete}>{content}</Content>
       </Box>
       <Remove onClick={onDeleteClickHandler}><MdDelete /></Remove>
     </TodoItemBlock>
     {open && (
        values.map((value) => (
-        <SubItem key={value.id} id={value.id} title={value.title} done={value.complete} content={value.content} />
+        <SubItem key={value.id} props={value} />
       )))}
-  </div>
+  </>
   )
 }
 
