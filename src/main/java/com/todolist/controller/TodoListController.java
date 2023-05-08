@@ -34,13 +34,13 @@ public class TodoListController {
         return ResponseEntity.status(CREATED).build();
     }
 
-    @GetMapping("/api/v1/todolist")
+    @GetMapping("/api/v1/todolists")
     public ResponseEntity<Slice<TodoList>> getById(Pageable pageable){
         Slice<TodoList> response = todoListService.findAll(pageable);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/api/v1/todolist/{id}")
+    @GetMapping("/api/v1/todolists/{id}")
     public ResponseEntity<TodoListSingleResponse> getById(@PathVariable final Long id) {
         TodoListSingleResponse response = todoListService.getById(id);
         return ResponseEntity.ok(response);

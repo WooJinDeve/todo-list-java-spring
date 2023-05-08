@@ -18,10 +18,10 @@ Content-Type: application/json
 }
 
 ### 전체조회
-GET http://localhost:8080/api/v1/todolist?size=10&page=0
+GET http://localhost:8080/api/v1/todolists?size=10&page=0
 
 ### 단건조회
-GET http://localhost:8080/api/v1/todolist/1
+GET http://localhost:8080/api/v1/todolists/1
 
 ### 부모 TODO 완료
 PUT http://localhost:8080/api/v1/todolists/1
