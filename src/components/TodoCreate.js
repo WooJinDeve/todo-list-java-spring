@@ -29,6 +29,7 @@ function TodoCreate() {
         alert("빈 문자는 저장할 수 없습니다.");
         return;
     }
+
     instance.post(`/api/v1/todolists`, {
         title: title, content: content, subListRequests : [{"title" : "test", "content" : "text"}, {"title" : "test", "content" : "text"}]
       }).then((res) => {
@@ -38,8 +39,7 @@ function TodoCreate() {
     .catch((err) => {
       console.log(err);
     }).finally(() => {
-        setTitle("");
-        setCotnent("");
+        onToggleHandler(e)
     });
   }
 

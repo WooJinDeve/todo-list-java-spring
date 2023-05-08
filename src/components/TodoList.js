@@ -11,14 +11,14 @@ function TodoList() {
 
   const dataFetch = () => {
     instance.get(`/api/v1/todolists?page=${page}&size=5`)
-    .then((res) => {
-      console.log(res.data);
-      setValues([...values, ...(res.data.content)])
-      setPage((page) => page + 1)
-      setNextPage(!res.data.last)
-      setFetching(false)
-    })
-    .catch((err) => {console.log(err)});
+      .then((res) => {
+        console.log(res.data);
+        setValues([...values, ...(res.data.content)])
+        setPage((page) => page + 1)
+        setNextPage(!res.data.last)
+        setFetching(false)
+      })
+      .catch((err) => { console.log(err) });
   };
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function TodoList() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-  
+
   useEffect(() => {
     if (isFetching && hasNextPage) dataFetch()
     else if (!hasNextPage) setFetching(false)
@@ -41,8 +41,14 @@ function TodoList() {
 
   return <TodoListBlock>
     {values.map((value) => (
-       <TodoItem key={value.id} props={value} />
-     ))}
+      <TodoItem
+        key={value.id}
+        id={value.id}
+        title={value.title}
+        complete={value.complete}
+        content={value.content}
+      />
+    ))}
   </TodoListBlock>
 }
 

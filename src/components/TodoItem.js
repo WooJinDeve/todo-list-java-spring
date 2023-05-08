@@ -4,10 +4,8 @@ import { MdDone, MdDelete } from 'react-icons/md';
 import { instance } from '../api/axios';
 import SubItem from './SubItem';
 
-function TodoItem({ props }) {
-  const {id, title, complete, content} = props;
-
-
+function TodoItem(props) {
+  const { id, title, complete, content } = props;
 
   const [open, setOpen] = useState(false);
   const [values, setValues] = useState([])
@@ -15,48 +13,55 @@ function TodoItem({ props }) {
   function onSubItemHandler(e) {
     setOpen(!open);
     instance.get(`/api/v1/todolists/${id}`)
-    .then((res) => {
-      setValues(res.data.subList)
-    }).catch((err) => {
-      console.log(err);
-    })
+      .then((res) => {
+        setValues(res.data.subList)
+      }).catch((err) => {
+        console.log(err);
+      })
   }
 
-  function onComplateClickHandler(e) {
+  function onComplateClickHandler(id) {
     instance.put(`/api/v1/todolists/${id}`)
-    .then((res) => {
+      .then(() => {
         window.location.replace("/")
       })
-    .catch((err) => {
-      console.log(err);
-    })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
-  function onDeleteClickHandler(e) {
+  function onDeleteClickHandler(id) {
     instance.delete(`/api/v1/todolists/${id}`)
-    .then((res) => {
+      .then((res) => {
         window.location.replace("/")
       })
-    .catch((err) => {
-      console.log(err);
-    })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   return (
     <>
-    <TodoItemBlock>
-      <CheckCircle done={complete} onClick={onComplateClickHandler} >{complete && <MdDone/>}</CheckCircle>
-      <Box onClick={onSubItemHandler}>
-        <Title done={complete}>{title}</Title>
-        <Content done={complete}>{content}</Content>
-      </Box>
-      <Remove onClick={onDeleteClickHandler}><MdDelete /></Remove>
-    </TodoItemBlock>
-    {open && (
-       values.map((value) => (
-        <SubItem key={value.id} props={value} />
-      )))}
-  </>
+      <TodoItemBlock>
+        <CheckCircle done={complete} onClick={() => onComplateClickHandler(id)} >{complete && <MdDone />}</CheckCircle>
+        <Box onClick={onSubItemHandler}>
+          <Title done={complete}>{title}</Title>
+          <Content done={complete}>{content}</Content>
+        </Box>
+        <Remove onClick={() => onDeleteClickHandler(id)}><MdDelete /></Remove>
+      </TodoItemBlock>
+      {open && (
+        values.map((value) => (
+          <SubItem 
+            key={value.id}
+            id={value.id}
+            title={value.title}
+            complete={value.complete}
+            content={value.content}
+            onComplateClickHandler={onComplateClickHandler}
+            onDeleteClickHandler={onDeleteClickHandler} />
+        )))}
+    </>
   )
 }
 
